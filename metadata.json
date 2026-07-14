@@ -1,0 +1,6 @@
+{
+  "name": "Daily Planner & Time Manager",
+  "description": "A daily planning and time management application with task lists, time-blocking schedules, and automatic device identification.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

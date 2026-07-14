@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Vazirmatn", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-natural-bg: #F8F5F1;
+  --color-natural-text: #4A443F;
+  --color-natural-muted: #8C8479;
+  --color-natural-muted-light: #A9A093;
+  --color-natural-sage: #84A59D;
+  --color-natural-olive: #5A5A40;
+  --color-natural-olive-hover: #4A4A30;
+  --color-natural-clay: #D4A373;
+  --color-natural-clay-light: #FAE1CC;
+  --color-natural-clay-dark: #B07D4E;
+  --color-natural-card: #FFFFFF;
+  --color-natural-border: #E6E0D8;
+  --color-natural-container: #F2EDE7;
+  --color-natural-item-bg: #F9F9F7;
+  --color-natural-badge-bg: #EAE4DD;
+  --color-natural-badge-border: #DCD5CB;
+}
