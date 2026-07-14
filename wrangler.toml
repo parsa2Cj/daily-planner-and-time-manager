@@ -4,8 +4,4 @@ pages_build_output_dir = "dist"
 
 
 
-# Bind a KV namespace
-[[kv_namespaces]]
-binding = "PLANNER_KV"
-id = "local-dev-id"
-preview_id = "local-preview-id"
+
