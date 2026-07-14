@@ -2,6 +2,10 @@ name = "daily-planner-and-time-manager"
 compatibility_date = "2024-03-20"
 pages_build_output_dir = "dist"
 
+[[kv_namespaces]]
+binding = "PLANNER_KV"
+id = "5854b5c60e0a42e0b81afc1e5c427a94"
+
 
 
 
