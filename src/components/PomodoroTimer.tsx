@@ -108,14 +108,14 @@ export default function PomodoroTimer({ onFocusSessionComplete }: PomodoroTimerP
   };
 
   return (
-    <div className="bg-natural-card border border-natural-border rounded-[32px] p-6 shadow-sm flex flex-col items-center justify-center text-center relative overflow-hidden h-[300px]" dir="rtl">
+    <div className="glass-card p-6 flex flex-col items-center justify-center text-center relative overflow-hidden h-[300px] animate-fade-in-up" style={{ animationDelay: '0.3s' }} dir="rtl">
       {/* Decorative gradient background pulse */}
       <div className={`absolute inset-0 bg-gradient-to-br transition-all duration-700 opacity-10 pointer-events-none ${
         mode === 'work' ? 'from-natural-clay/30 to-natural-bg/0' : 'from-natural-sage/30 to-natural-bg/0'
       }`} />
 
       {/* Mode Switches */}
-      <div className="flex items-center gap-1.5 bg-natural-container p-1 rounded-xl border border-natural-border mb-4 z-10 text-xs">
+      <div className="flex items-center gap-1.5 glass-panel p-1 mb-4 z-10 text-xs">
         <button
           onClick={() => resetTimer('work')}
           className={`py-1.5 px-3 rounded-lg font-bold transition-all ${
@@ -145,7 +145,7 @@ export default function PomodoroTimer({ onFocusSessionComplete }: PomodoroTimerP
       {/* Main Clock UI */}
       <div className="relative flex items-center justify-center w-36 h-36 mb-4">
         {/* Ring Background */}
-        <svg className="absolute w-full h-full -rotate-90">
+        <svg className="absolute w-full h-full -rotate-90 drop-shadow-md">
           <circle
             cx="72"
             cy="72"

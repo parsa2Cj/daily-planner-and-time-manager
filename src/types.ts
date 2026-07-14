@@ -22,8 +22,4 @@ export interface DailyLog {
   notes: string;
 }
 
-export interface DeviceInfo {
-  id: string;
-  simulatedMac: string;
-  firstSeen: number;
-}
+

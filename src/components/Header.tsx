@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Info, Download, Upload, Clock, Calendar } from 'lucide-react';
-import { DeviceInfo } from '../types';
+import { Shield, Info, Download, Upload, Clock, Calendar, Moon, Sun, User, LogOut, Settings } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 interface HeaderProps {
-  deviceInfo: DeviceInfo;
   onExport: () => void;
   onImport: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  isDarkMode: boolean;
+  onToggleTheme: () => void;
 }
 
-export default function Header({ deviceInfo, onExport, onImport }: HeaderProps) {
+export default function Header({ onExport, onImport, isDarkMode, onToggleTheme }: HeaderProps) {
+  const { user, logout } = useAuth();
   const [time, setTime] = useState<string>('');
   const [persianDate, setPersianDate] = useState<string>('');
   const [showInfo, setShowInfo] = useState<boolean>(false);
@@ -41,7 +44,7 @@ export default function Header({ deviceInfo, onExport, onImport }: HeaderProps) 
   }, []);
 
   return (
-    <header className="bg-natural-card border border-natural-border py-6 px-6 sm:px-8 text-natural-text rounded-[32px] mb-6 shadow-sm" dir="rtl">
+    <header className="glass-card py-6 px-6 sm:px-8 text-natural-text mb-6 animate-fade-in-up" dir="rtl">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
         {/* Title and Date */}
         <div className="space-y-2">
@@ -68,28 +71,19 @@ export default function Header({ deviceInfo, onExport, onImport }: HeaderProps) 
 
         {/* Device Authentication status & Backups */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-          {/* Mock MAC Identification Badge */}
+          {/* User Profile Badge */}
           <div className="relative">
             <div className="flex items-center gap-3 bg-natural-badge-bg border border-natural-badge-border rounded-xl p-3 shadow-inner">
               <div className="p-1.5 bg-natural-sage/20 text-natural-sage rounded-lg border border-natural-sage/30">
-                <Shield className="w-5 h-5" />
+                <User className="w-5 h-5" />
               </div>
               <div className="text-right">
-                <div className="flex items-center gap-1.5">
-                  <p className="text-[10px] text-natural-muted font-bold tracking-wider uppercase">
-                    مک آدرس مجازی (شناسه دستگاه)
-                  </p>
-                  <button
-                    onClick={() => setShowInfo(!showInfo)}
-                    className="text-natural-muted hover:text-natural-olive transition-colors"
-                    title="توضیحات شناسایی"
-                  >
-                    <Info className="w-3.5 h-3.5 cursor-pointer" />
-                  </button>
-                </div>
+                <p className="text-[10px] text-natural-muted font-bold tracking-wider uppercase">
+                  کاربر فعلی
+                </p>
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs text-natural-text font-bold tracking-wider">
-                    {deviceInfo.simulatedMac}
+                  <span className="font-mono text-xs text-natural-text font-bold">
+                    {user?.username}
                   </span>
                   <span className="flex h-2 w-2 relative">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-natural-sage opacity-75"></span>
@@ -98,33 +92,28 @@ export default function Header({ deviceInfo, onExport, onImport }: HeaderProps) 
                 </div>
               </div>
             </div>
-
-            {/* Info Dropdown */}
-            {showInfo && (
-              <div className="absolute left-0 mt-2 w-72 bg-natural-card border border-natural-border p-4 rounded-xl shadow-2xl z-50 text-xs text-natural-text leading-relaxed space-y-2">
-                <p className="font-bold text-natural-clay-dark">ℹ️ چرا مک آدرس واقعی نیست؟</p>
-                <p>
-                  به دلیل قوانین امنیتی و حفظ حریم خصوصی در مرورگرهای وب، وب‌سایت‌ها اجازه دسترسی مستقیم به مک‌آدرس (MAC Address) سخت‌افزاری شما را ندارند.
-                </p>
-                <p>
-                  در پاسخ، ما یک <strong>مک آدرس مجازی یکتا و پایدار (Virtual MAC)</strong> برای مرورگر شما ایجاد کرده‌ایم که در حافظه امن مرورگر ذخیره شده و دقیقا مانند مک آدرس، بدون نیاز به ثبت‌نام یا لاگین، شما را شناسایی می‌کند.
-                </p>
-              </div>
-            )}
           </div>
 
-          {/* Backup / Restore Controls */}
+          {/* Backup / Restore / Theme Controls */}
           <div className="flex items-center gap-2 bg-natural-container p-1 rounded-xl border border-natural-border">
             <button
+              onClick={onToggleTheme}
+              className="flex items-center justify-center p-2 text-natural-text glass-button"
+              title={isDarkMode ? 'تغییر به حالت روز' : 'تغییر به حالت شب'}
+            >
+              {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
+            <span className="w-px h-6 bg-natural-border mx-1"></span>
+            <button
               onClick={onExport}
-              className="flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-semibold text-natural-muted hover:text-natural-text hover:bg-natural-card rounded-lg transition-all"
+              className="flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-semibold text-natural-text glass-button"
               title="خروجی بکاپ داده‌ها"
             >
               <Download className="w-4 h-4" />
               <span className="hidden md:inline">پشتیبان‌گیری</span>
             </button>
             <label
-              className="flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-semibold text-natural-muted hover:text-natural-text hover:bg-natural-card rounded-lg cursor-pointer transition-all"
+              className="flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-semibold text-natural-text glass-button cursor-pointer"
               title="بازیابی داده‌ها از فایل"
             >
               <Upload className="w-4 h-4" />
@@ -136,6 +125,25 @@ export default function Header({ deviceInfo, onExport, onImport }: HeaderProps) 
                 className="hidden"
               />
             </label>
+            <span className="w-px h-6 bg-natural-border mx-1"></span>
+            {user?.role === 'admin' && (
+              <Link
+                to="/admin"
+                className="flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-semibold text-natural-text glass-button"
+                title="پنل مدیریت"
+              >
+                <Settings className="w-4 h-4" />
+                <span className="hidden md:inline">ادمین</span>
+              </Link>
+            )}
+            <button
+              onClick={logout}
+              className="flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-semibold text-rose-500 hover:text-white hover:bg-rose-500 border border-transparent transition-all duration-300 rounded-xl"
+              title="خروج از سیستم"
+            >
+              <LogOut className="w-4 h-4" />
+              <span className="hidden md:inline">خروج</span>
+            </button>
           </div>
         </div>
       </div>

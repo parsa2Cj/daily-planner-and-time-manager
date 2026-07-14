@@ -1,13 +1,12 @@
 import React from 'react';
 import { CheckCircle2, Calendar, Clock, Activity, Shield } from 'lucide-react';
-import { Task, ScheduleEvent, DailyLog, DeviceInfo } from '../types';
+import { Task, ScheduleEvent, DailyLog } from '../types';
 
 interface DashboardStatsProps {
   tasks: Task[];
   events: ScheduleEvent[];
   focusSessionsCount: number;
   log: DailyLog;
-  deviceInfo: DeviceInfo;
 }
 
 export default function DashboardStats({
@@ -15,7 +14,6 @@ export default function DashboardStats({
   events,
   focusSessionsCount,
   log,
-  deviceInfo,
 }: DashboardStatsProps) {
   const totalTasks = tasks.length;
   const completedTasks = tasks.filter((t) => t.completed).length;
@@ -31,7 +29,7 @@ export default function DashboardStats({
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6" dir="rtl">
       {/* Task progress widget */}
-      <div className="bg-natural-card border border-natural-border p-4 sm:p-5 rounded-[32px] flex items-center gap-3.5 shadow-sm">
+      <div className="glass-card p-4 sm:p-5 flex items-center gap-3.5 hover:scale-[1.02] cursor-default animate-scale-in" style={{ animationDelay: '0.1s' }}>
         <div className="p-2.5 bg-natural-sage/20 text-natural-sage rounded-2xl border border-natural-sage/30 shrink-0">
           <CheckCircle2 className="w-5 h-5" />
         </div>
@@ -52,7 +50,7 @@ export default function DashboardStats({
       </div>
 
       {/* Blocked hours widget */}
-      <div className="bg-natural-card border border-natural-border p-4 sm:p-5 rounded-[32px] flex items-center gap-3.5 shadow-sm">
+      <div className="glass-card p-4 sm:p-5 flex items-center gap-3.5 hover:scale-[1.02] cursor-default animate-scale-in" style={{ animationDelay: '0.2s' }}>
         <div className="p-2.5 bg-natural-olive/20 text-natural-olive rounded-2xl border border-natural-olive/30 shrink-0">
           <Calendar className="w-5 h-5" />
         </div>
@@ -66,7 +64,7 @@ export default function DashboardStats({
       </div>
 
       {/* Focus segments completed widget */}
-      <div className="bg-natural-card border border-natural-border p-4 sm:p-5 rounded-[32px] flex items-center gap-3.5 shadow-sm">
+      <div className="glass-card p-4 sm:p-5 flex items-center gap-3.5 hover:scale-[1.02] cursor-default animate-scale-in" style={{ animationDelay: '0.3s' }}>
         <div className="p-2.5 bg-natural-clay/20 text-natural-clay rounded-2xl border border-natural-clay/30 shrink-0">
           <Clock className="w-5 h-5 animate-pulse" />
         </div>
@@ -80,7 +78,7 @@ export default function DashboardStats({
       </div>
 
       {/* Energy & Mood summary widget */}
-      <div className="bg-natural-card border border-natural-border p-4 sm:p-5 rounded-[32px] flex items-center gap-3.5 shadow-sm">
+      <div className="glass-card p-4 sm:p-5 flex items-center gap-3.5 hover:scale-[1.02] cursor-default animate-scale-in" style={{ animationDelay: '0.4s' }}>
         <div className="p-2.5 bg-natural-sage/20 text-natural-sage rounded-2xl border border-natural-sage/30 shrink-0">
           <Activity className="w-5 h-5" />
         </div>
@@ -91,7 +89,7 @@ export default function DashboardStats({
             <span className="text-lg" title="احساس شما">{log.mood}</span>
           </div>
           <p className="text-[10px] text-natural-muted font-bold mt-1">
-            ثبت شده برای این دستگاه
+            ثبت شده برای شما
           </p>
         </div>
       </div>

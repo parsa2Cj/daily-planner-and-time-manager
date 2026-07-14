@@ -17,7 +17,7 @@ const MOODS = [
 
 export default function ReflectionSection({ log, onChangeLog }: ReflectionSectionProps) {
   return (
-    <div className="bg-natural-card border border-natural-border rounded-[32px] p-6 shadow-sm flex flex-col h-[300px]" dir="rtl">
+    <div className="glass-card p-6 flex flex-col h-[300px] animate-fade-in-up" style={{ animationDelay: '0.4s' }} dir="rtl">
       {/* Header */}
       <div className="flex items-center gap-2 mb-4 pb-4 border-b border-natural-border shrink-0">
         <span className="p-1.5 bg-natural-sage/20 text-natural-sage rounded-xl">
@@ -34,7 +34,7 @@ export default function ReflectionSection({ log, onChangeLog }: ReflectionSectio
             <Heart className="w-3.5 h-3.5 text-rose-500" />
             حالت روحی امروز چطوره؟
           </label>
-          <div className="flex items-center justify-between gap-1 bg-natural-container p-1.5 rounded-xl border border-natural-border">
+          <div className="flex items-center justify-between gap-1 glass-panel p-1.5">
             {MOODS.map((m) => (
               <button
                 key={m.label}
@@ -86,7 +86,7 @@ export default function ReflectionSection({ log, onChangeLog }: ReflectionSectio
             placeholder="دستاوردها، چالش‌ها یا نکات امروز را یادداشت کنید..."
             value={log.notes}
             onChange={(e) => onChangeLog({ notes: e.target.value })}
-            className="w-full bg-natural-bg border border-natural-border focus:border-natural-sage/50 focus:ring-1 focus:ring-natural-sage/30 rounded-xl p-3 text-xs text-natural-text placeholder:text-natural-muted-light transition-all outline-none h-20 resize-none"
+            className="w-full bg-natural-container/50 backdrop-blur-sm border border-natural-border focus:border-natural-sage/70 focus:ring-2 focus:ring-natural-sage/20 rounded-xl p-3 text-xs text-natural-text placeholder:text-natural-muted-light transition-all outline-none h-20 resize-none"
           />
         </div>
       </div>

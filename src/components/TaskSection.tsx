@@ -69,7 +69,7 @@ export default function TaskSection({
   };
 
   return (
-    <div className="bg-natural-card border border-natural-border rounded-[32px] p-6 shadow-sm flex flex-col h-[520px]" dir="rtl">
+    <div className="glass-card p-6 flex flex-col h-[520px] animate-fade-in-up" style={{ animationDelay: '0.2s' }} dir="rtl">
       {/* Header */}
       <div className="flex items-center justify-between mb-4 pb-4 border-b border-natural-border">
         <div className="flex items-center gap-2">
@@ -91,7 +91,7 @@ export default function TaskSection({
             placeholder="کار جدیدی اضافه کنید..."
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
-            className="w-full bg-natural-bg border border-natural-border focus:border-natural-sage/50 focus:ring-1 focus:ring-natural-sage/30 rounded-xl py-3 pl-4 pr-11 text-sm text-natural-text placeholder:text-natural-muted-light transition-all outline-none"
+            className="w-full bg-natural-container/50 border border-natural-border focus:border-natural-sage/70 focus:ring-2 focus:ring-natural-sage/20 rounded-xl py-3 pl-4 pr-11 text-sm text-natural-text placeholder:text-natural-muted-light transition-all outline-none backdrop-blur-sm"
           />
           <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-natural-muted-light">
             <Sparkles className="w-4 h-4" />
@@ -100,7 +100,7 @@ export default function TaskSection({
 
         <div className="flex items-center justify-between gap-2">
           {/* Priority selector */}
-          <div className="flex items-center gap-1 bg-natural-bg/50 p-1 rounded-lg border border-natural-border">
+          <div className="flex items-center gap-1 glass-panel p-1">
             <button
               type="button"
               onClick={() => setPriority('high')}
@@ -138,7 +138,7 @@ export default function TaskSection({
 
           <button
             type="submit"
-            className="flex items-center gap-1.5 bg-natural-olive hover:bg-natural-olive-hover text-white text-xs font-bold py-2 px-4 rounded-xl shadow-md transition-all cursor-pointer"
+            className="flex items-center gap-1.5 bg-natural-olive hover:bg-natural-olive-hover text-white text-xs font-bold py-2 px-4 rounded-xl shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-95"
           >
             <Plus className="w-4 h-4" />
             افزودن کار
@@ -147,7 +147,7 @@ export default function TaskSection({
       </form>
 
       {/* Filter Tabs */}
-      <div className="flex items-center justify-between bg-natural-container p-1 rounded-xl border border-natural-border mb-3 text-xs">
+      <div className="flex items-center justify-between glass-panel p-1 mb-3 text-xs">
         <div className="flex items-center gap-1">
           <button
             onClick={() => setFilter('all')}
@@ -195,10 +195,10 @@ export default function TaskSection({
           sortedTasks.map((task) => (
             <div
               key={task.id}
-              className={`group flex items-center justify-between p-3 rounded-2xl border transition-all ${
+              className={`group flex items-center justify-between p-3 rounded-2xl border transition-all duration-300 hover:scale-[1.01] ${
                 task.completed
-                  ? 'bg-natural-item-bg/50 border-natural-border text-natural-muted opacity-60'
-                  : 'bg-natural-item-bg border border-natural-border hover:border-natural-sage/30 text-natural-text shadow-sm'
+                  ? 'bg-natural-item-bg/40 border-transparent text-natural-muted opacity-60'
+                  : 'bg-white/60 backdrop-blur-md border border-natural-border hover:border-natural-sage/40 hover:shadow-md text-natural-text'
               }`}
             >
               <div

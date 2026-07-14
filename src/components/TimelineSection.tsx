@@ -66,7 +66,7 @@ export default function TimelineSection({ events, onAddEvent, onDeleteEvent }: T
   };
 
   return (
-    <div className="bg-natural-card border border-natural-border rounded-[32px] p-6 shadow-sm flex flex-col h-[520px]" dir="rtl">
+    <div className="glass-card p-6 flex flex-col h-[520px] animate-fade-in-up" style={{ animationDelay: '0.1s' }} dir="rtl">
       {/* Header */}
       <div className="flex items-center justify-between mb-4 pb-4 border-b border-natural-border">
         <div className="flex items-center gap-2">
@@ -127,7 +127,7 @@ export default function TimelineSection({ events, onAddEvent, onDeleteEvent }: T
                   // Free hour slot button
                   <button
                     onClick={() => handleOpenAdd(hour)}
-                    className="w-full text-right p-3 rounded-2xl border border-dashed border-[#DCD5CB] hover:border-natural-sage/50 hover:bg-natural-bg/50 text-natural-muted hover:text-natural-sage text-xs font-semibold flex items-center justify-between transition-all cursor-pointer group-hover:border-natural-muted-light"
+                    className="w-full text-right p-3 rounded-2xl border border-dashed border-[#DCD5CB] hover:border-natural-sage/50 bg-white/30 hover:bg-white/60 text-natural-muted hover:text-natural-sage text-xs font-semibold flex items-center justify-between transition-all cursor-pointer group-hover:border-natural-muted-light backdrop-blur-sm"
                   >
                     <span>زمان خالی</span>
                     <Plus className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -142,7 +142,7 @@ export default function TimelineSection({ events, onAddEvent, onDeleteEvent }: T
       {/* Add Event Modal overlay */}
       {selectedHour && (
         <div className="fixed inset-0 bg-[#4A443F]/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
-          <div className="bg-natural-card border border-natural-border rounded-[32px] w-full max-w-md p-6 shadow-2xl space-y-4" dir="rtl">
+          <div className="glass-card w-full max-w-md p-6 shadow-2xl space-y-4 animate-scale-in" dir="rtl">
             <div className="flex items-center justify-between pb-3 border-b border-natural-border">
               <div className="flex items-center gap-2">
                 <span className="p-1.5 bg-natural-sage/20 text-natural-sage rounded-xl">
@@ -166,7 +166,7 @@ export default function TimelineSection({ events, onAddEvent, onDeleteEvent }: T
                   placeholder="مثال: کار روی پروژه، ناهار و استراحت..."
                   value={eventTitle}
                   onChange={(e) => setEventTitle(e.target.value)}
-                  className="w-full bg-natural-bg border border-natural-border focus:border-natural-sage/50 focus:ring-1 focus:ring-natural-sage/30 rounded-xl py-3 px-4 text-sm text-natural-text placeholder:text-natural-muted-light transition-all outline-none"
+                  className="w-full bg-natural-container/50 backdrop-blur-sm border border-natural-border focus:border-natural-sage/70 focus:ring-2 focus:ring-natural-sage/20 rounded-xl py-3 px-4 text-sm text-natural-text placeholder:text-natural-muted-light transition-all outline-none"
                   required
                   autoFocus
                 />
@@ -179,7 +179,7 @@ export default function TimelineSection({ events, onAddEvent, onDeleteEvent }: T
                   <select
                     value={duration}
                     onChange={(e) => setDuration(e.target.value)}
-                    className="w-full bg-natural-bg border border-natural-border focus:border-natural-sage/50 rounded-xl py-2.5 px-3 text-sm text-natural-text outline-none"
+                    className="w-full bg-natural-container/50 backdrop-blur-sm border border-natural-border focus:border-natural-sage/70 focus:ring-2 focus:ring-natural-sage/20 rounded-xl py-2.5 px-3 text-sm text-natural-text outline-none transition-all"
                   >
                     <option value="1">۱ ساعت</option>
                     <option value="2">۲ ساعت</option>
@@ -212,13 +212,13 @@ export default function TimelineSection({ events, onAddEvent, onDeleteEvent }: T
                 <button
                   type="button"
                   onClick={() => setSelectedHour(null)}
-                  className="bg-natural-container hover:bg-natural-badge-bg border border-natural-border text-natural-text text-xs font-bold py-2.5 px-4 rounded-xl transition-all cursor-pointer"
+                  className="glass-button text-natural-text text-xs font-bold py-2.5 px-4 cursor-pointer"
                 >
                   انصراف
                 </button>
                 <button
                   type="submit"
-                  className="bg-natural-olive hover:bg-natural-olive-hover text-white text-xs font-bold py-2.5 px-4 rounded-xl shadow-lg transition-all cursor-pointer"
+                  className="bg-natural-olive hover:bg-natural-olive-hover text-white text-xs font-bold py-2.5 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all cursor-pointer active:scale-95"
                 >
                   ثبت برنامه
                 </button>
