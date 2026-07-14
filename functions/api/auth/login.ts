@@ -48,7 +48,7 @@ export const onRequestPost: PagesFunction<{ PLANNER_KV: KVNamespace }> = async (
       }
     });
 
-  } catch (error) {
-    return new Response(JSON.stringify({ error: 'خطای سرور' }), { status: 500 });
+  } catch (error: any) {
+    return new Response(JSON.stringify({ error: 'خطای سرور: ' + error.message }), { status: 500 });
   }
 };
