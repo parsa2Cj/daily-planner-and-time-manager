@@ -1,4 +1,4 @@
-import { getSessionUser } from '../../utils/auth';
+import { getSessionUser } from '../utils/auth';
 
 export const onRequestGet: PagesFunction<{ PLANNER_KV: KVNamespace }> = async (context) => {
   const user = await getSessionUser(context.request, context.env.PLANNER_KV);
