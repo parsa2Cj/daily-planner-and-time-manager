@@ -21,6 +21,7 @@ const AppContent = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
       <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminPanel /></ProtectedRoute>} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };
