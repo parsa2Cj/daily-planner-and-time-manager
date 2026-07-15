@@ -5,7 +5,8 @@ import TimelineSection from '../components/TimelineSection';
 import TaskSection from '../components/TaskSection';
 import PomodoroTimer from '../components/PomodoroTimer';
 import ReflectionSection from '../components/ReflectionSection';
-import { Task, ScheduleEvent, DailyLog, Priority } from '../types';
+import MonthlyCalendar from '../components/MonthlyCalendar';
+import { Task, ScheduleEvent, DailyLog, Priority, ActivityMap } from '../types';
 import { ShieldAlert, RefreshCw } from 'lucide-react';
 
 const DEFAULT_LOG: DailyLog = {
@@ -20,6 +21,13 @@ export default function Dashboard() {
   const [events, setEvents] = useState<ScheduleEvent[]>([]);
   const [focusSessionsCount, setFocusSessionsCount] = useState<number>(0);
   const [dailyLog, setDailyLog] = useState<DailyLog>(DEFAULT_LOG);
+
+  // Calendar State
+  const [selectedDate, setSelectedDate] = useState<string>(() => {
+    const today = new Date();
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  });
+  const [activityMap, setActivityMap] = useState<ActivityMap>({});
 
   // Theme State
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
@@ -44,29 +52,53 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch('/api/data');
+        const res = await fetch(`/api/data?date=${selectedDate}`);
         const json = await res.json();
         if (res.ok && json.data) {
           setTasks(json.data.tasks || []);
           setEvents(json.data.events || []);
           setFocusSessionsCount(json.data.focusSessionsCount || 0);
           setDailyLog(json.data.dailyLog || DEFAULT_LOG);
+        } else {
+          // Reset if no data for the day
+          setTasks([]);
+          setEvents([]);
+          setFocusSessionsCount(0);
+          setDailyLog(DEFAULT_LOG);
         }
       } catch (err) {
         console.error('Failed to fetch data', err);
       }
     };
     fetchData();
+  }, [selectedDate]);
+
+  const fetchActivityMap = async () => {
+    try {
+      const res = await fetch('/api/activity');
+      const json = await res.json();
+      if (res.ok && json.data) {
+        setActivityMap(json.data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch activity map', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchActivityMap();
   }, []);
 
   // Save modifications to API
   const saveData = async (dataToSave: any) => {
     try {
-      await fetch('/api/data', {
+      await fetch(`/api/data?date=${selectedDate}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dataToSave)
       });
+      // Optionally re-fetch activity map here if it might have changed
+      fetchActivityMap();
     } catch (err) {
       console.error('Failed to save data', err);
     }
@@ -194,6 +226,17 @@ export default function Dashboard() {
           focusSessionsCount={focusSessionsCount}
           log={dailyLog}
         />
+
+        {/* Monthly Calendar */}
+        <div className="flex justify-center w-full max-w-3xl mx-auto">
+          <div className="w-full">
+            <MonthlyCalendar
+              selectedDate={selectedDate}
+              onSelectDate={setSelectedDate}
+              activityMap={activityMap}
+            />
+          </div>
+        </div>
 
         {/* Main interactive grids */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">

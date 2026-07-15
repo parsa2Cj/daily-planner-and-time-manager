@@ -22,4 +22,7 @@ export interface DailyLog {
   notes: string;
 }
 
+export interface ActivityMap {
+  [date: string]: number; // YYYY-MM-DD -> score
+}
 
