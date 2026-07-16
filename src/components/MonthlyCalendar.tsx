@@ -8,9 +8,9 @@ interface MonthlyCalendarProps {
   activityMap: ActivityMap;
 }
 
-const MONTHS_FA = [
-  'ژانویه', 'فوریه', 'مارس', 'آوریل', 'مه', 'ژوئن',
-  'ژوئیه', 'اوت', 'سپتامبر', 'اکتبر', 'نوامبر', 'دسامبر'
+const MONTHS_EN = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
 ];
 
 export default function MonthlyCalendar({
@@ -97,7 +97,7 @@ export default function MonthlyCalendar({
         </button>
         
         <h3 className="font-semibold text-natural-text text-lg">
-          {MONTHS_FA[currentMonth]} {currentYear}
+          {MONTHS_EN[currentMonth]} {currentYear}
         </h3>
         
         <button 
@@ -118,7 +118,7 @@ export default function MonthlyCalendar({
         <div>Sat</div>
       </div>
 
-      <div className="grid grid-cols-7 gap-1 sm:gap-2">
+      <div className="grid grid-cols-7 gap-1 sm:gap-2 justify-items-center">
         {renderDays()}
       </div>
       

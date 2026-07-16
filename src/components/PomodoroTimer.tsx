@@ -93,7 +93,7 @@ export default function PomodoroTimer({ onFocusSessionComplete }: PomodoroTimerP
 
   const getProgressPercentage = () => {
     const total = MODE_TIMES[mode];
-    return ((total - timeLeft) / total) * 100;
+    return (timeLeft / total) * 100;
   };
 
   const getModeLabel = (m: Mode) => {
