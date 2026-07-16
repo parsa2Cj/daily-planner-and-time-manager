@@ -141,7 +141,7 @@ export default function PomodoroTimer({ onFocusSessionComplete }: PomodoroTimerP
       {/* Main Clock UI */}
       <div className="relative flex items-center justify-center w-36 h-36 mb-4">
         {/* Ring Background */}
-        <svg className="absolute w-full h-full -rotate-90 drop-shadow-md margin:-1px">
+        <svg className="absolute w-full h-full -rotate-90 drop-shadow-md overflow-visible" viewBox="0 0 144 144">
           <circle
             cx="72"
             cy="72"
