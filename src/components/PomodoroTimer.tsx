@@ -110,33 +110,29 @@ export default function PomodoroTimer({ onFocusSessionComplete }: PomodoroTimerP
   return (
     <div className="glass-card p-6 flex flex-col items-center justify-center text-center relative overflow-hidden h-[300px] animate-fade-in-up" style={{ animationDelay: '0.3s' }} dir="rtl">
       {/* Decorative gradient background pulse */}
-      <div className={`absolute inset-0 bg-gradient-to-br transition-all duration-700 opacity-10 pointer-events-none ${
-        mode === 'work' ? 'from-natural-clay/30 to-natural-bg/0' : 'from-natural-sage/30 to-natural-bg/0'
-      }`} />
+      <div className={`absolute inset-0 bg-gradient-to-br transition-all duration-700 opacity-10 pointer-events-none ${mode === 'work' ? 'from-natural-clay/30 to-natural-bg/0' : 'from-natural-sage/30 to-natural-bg/0'
+        }`} />
 
       {/* Mode Switches */}
       <div className="flex items-center gap-1.5 glass-panel p-1 mb-4 z-10 text-xs">
         <button
           onClick={() => resetTimer('work')}
-          className={`py-1.5 px-3 rounded-lg font-bold transition-all ${
-            mode === 'work' ? 'bg-natural-clay/20 text-natural-clay-dark border border-natural-clay/30 shadow-sm' : 'text-natural-muted hover:text-natural-text'
-          }`}
+          className={`py-1.5 px-3 rounded-lg font-bold transition-all ${mode === 'work' ? 'bg-natural-clay/20 text-natural-clay-dark border border-natural-clay/30 shadow-sm' : 'text-natural-muted hover:text-natural-text'
+            }`}
         >
           تمرکز (۲۵ د)
         </button>
         <button
           onClick={() => resetTimer('shortBreak')}
-          className={`py-1.5 px-3 rounded-lg font-bold transition-all ${
-            mode === 'shortBreak' ? 'bg-natural-sage/20 text-natural-sage border border-natural-sage/30 shadow-sm' : 'text-natural-muted hover:text-natural-text'
-          }`}
+          className={`py-1.5 px-3 rounded-lg font-bold transition-all ${mode === 'shortBreak' ? 'bg-natural-sage/20 text-natural-sage border border-natural-sage/30 shadow-sm' : 'text-natural-muted hover:text-natural-text'
+            }`}
         >
           کوتاه (۵ د)
         </button>
         <button
           onClick={() => resetTimer('longBreak')}
-          className={`py-1.5 px-3 rounded-lg font-bold transition-all ${
-            mode === 'longBreak' ? 'bg-natural-olive/20 text-natural-olive border border-natural-olive/30 shadow-sm' : 'text-natural-muted hover:text-natural-text'
-          }`}
+          className={`py-1.5 px-3 rounded-lg font-bold transition-all ${mode === 'longBreak' ? 'bg-natural-olive/20 text-natural-olive border border-natural-olive/30 shadow-sm' : 'text-natural-muted hover:text-natural-text'
+            }`}
         >
           طولانی (۱۵ د)
         </button>
@@ -145,7 +141,7 @@ export default function PomodoroTimer({ onFocusSessionComplete }: PomodoroTimerP
       {/* Main Clock UI */}
       <div className="relative flex items-center justify-center w-36 h-36 mb-4">
         {/* Ring Background */}
-        <svg className="absolute w-full h-full -rotate-90 drop-shadow-md">
+        <svg className="absolute w-full h-full -rotate-90 drop-shadow-md margin:-1px">
           <circle
             cx="72"
             cy="72"
@@ -158,9 +154,8 @@ export default function PomodoroTimer({ onFocusSessionComplete }: PomodoroTimerP
             cx="72"
             cy="72"
             r="64"
-            className={`fill-none transition-all duration-300 ${
-              mode === 'work' ? 'stroke-natural-clay' : 'stroke-natural-sage'
-            }`}
+            className={`fill-none transition-all duration-300 ${mode === 'work' ? 'stroke-natural-clay' : 'stroke-natural-sage'
+              }`}
             strokeWidth="6"
             strokeDasharray={402} // 2 * pi * r (2 * 3.14 * 64)
             strokeDashoffset={402 - (402 * getProgressPercentage()) / 100}
@@ -183,13 +178,12 @@ export default function PomodoroTimer({ onFocusSessionComplete }: PomodoroTimerP
       <div className="flex items-center gap-3 z-10">
         <button
           onClick={toggleTimer}
-          className={`flex items-center justify-center w-11 h-11 rounded-full cursor-pointer transition-all border ${
-            isRunning
+          className={`flex items-center justify-center w-11 h-11 rounded-full cursor-pointer transition-all border ${isRunning
               ? 'bg-natural-container border-natural-border text-natural-muted hover:text-natural-text'
               : mode === 'work'
-              ? 'bg-natural-clay/20 border-natural-clay/30 text-natural-clay-dark hover:bg-natural-clay/30 hover:scale-105'
-              : 'bg-natural-sage/20 border-natural-sage/30 text-natural-sage hover:bg-natural-sage/30 hover:scale-105'
-          }`}
+                ? 'bg-natural-clay/20 border-natural-clay/30 text-natural-clay-dark hover:bg-natural-clay/30 hover:scale-105'
+                : 'bg-natural-sage/20 border-natural-sage/30 text-natural-sage hover:bg-natural-sage/30 hover:scale-105'
+            }`}
           title={isRunning ? 'توقف' : 'شروع'}
         >
           {isRunning ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
