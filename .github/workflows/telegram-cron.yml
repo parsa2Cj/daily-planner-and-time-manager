@@ -1,0 +1,17 @@
+name: Telegram Hourly Cron
+
+on:
+  schedule:
+    # Run every hour on the hour
+    - cron: '0 * * * *'
+  workflow_dispatch:
+    # Allows manual triggering from GitHub Actions tab
+
+jobs:
+  run-cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hit Hourly Cron Endpoint
+        run: |
+          # Use SITE_URL and CRON_SECRET from GitHub repository secrets
+          curl -X GET "${{ secrets.SITE_URL }}/api/cron/hourly?secret=${{ secrets.CRON_SECRET }}"

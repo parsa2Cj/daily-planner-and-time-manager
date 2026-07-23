@@ -21,6 +21,7 @@ export default function AdminPanel() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const [setupLoading, setSetupLoading] = useState(false);
 
   // Edit State
   const [editingUser, setEditingUser] = useState<UserInfo | null>(null);
@@ -134,6 +135,23 @@ export default function AdminPanel() {
     }
   };
 
+  const handleSetupWebhook = async () => {
+    setSetupLoading(true);
+    try {
+      const res = await fetch('/api/admin/setup-webhook', { method: 'POST' });
+      const data = await res.json();
+      if (res.ok) {
+        alert(data.message || 'اتصال با موفقیت انجام شد!');
+      } else {
+        alert(data.error || 'خطا در اتصال');
+      }
+    } catch (err) {
+      alert('خطای سرور');
+    } finally {
+      setSetupLoading(false);
+    }
+  };
+
   if (loading) return <div className="min-h-screen bg-natural-bg flex items-center justify-center">درحال بارگذاری...</div>;
 
   return (
@@ -150,6 +168,16 @@ export default function AdminPanel() {
              بازگشت به برنامه
              <ArrowRight className="w-4 h-4" />
           </Link>
+        </div>
+
+        <div className="flex justify-end mb-4">
+          <button 
+            onClick={handleSetupWebhook} 
+            disabled={setupLoading}
+            className="flex items-center gap-2 bg-[#2AABEE] hover:bg-[#229ED9] text-white text-sm font-bold py-2 px-4 rounded-xl shadow-md transition-all active:scale-95 disabled:opacity-50"
+          >
+            {setupLoading ? 'در حال اتصال...' : '🔗 اتصال خودکار ربات تلگرام'}
+          </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
