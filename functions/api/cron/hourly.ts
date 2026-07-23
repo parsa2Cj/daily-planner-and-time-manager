@@ -2,6 +2,7 @@ export const onRequestGet: PagesFunction<{ PLANNER_KV: KVNamespace, TELEGRAM_BOT
   try {
     const url = new URL(context.request.url);
     const secret = url.searchParams.get('secret');
+    const overrideHour = url.searchParams.get('hour');
 
     // Only allow execution if secret matches the CRON_SECRET env variable
     // If CRON_SECRET is not set, we'll allow it for now, but it's not secure.
@@ -34,7 +35,9 @@ export const onRequestGet: PagesFunction<{ PLANNER_KV: KVNamespace, TELEGRAM_BOT
     
     // Format to YYYY-MM-DD
     const todayStr = `${dateMap.year}-${dateMap.month}-${dateMap.day}`;
-    const currentHourStr = dateMap.hour; // "09", "14", etc.
+    // Use overrideHour if provided, otherwise use current time's hour. Also replace "24" with "00".
+    let currentHourStr = overrideHour || dateMap.hour;
+    if (currentHourStr === '24') currentHourStr = '00';
 
     // Get all users
     const { keys } = await context.env.PLANNER_KV.list({ prefix: 'user:' });
