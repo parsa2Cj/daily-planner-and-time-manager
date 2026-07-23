@@ -12,7 +12,7 @@ export const onRequestGet: PagesFunction<{ PLANNER_KV: KVNamespace }> = async (c
       const uStr = await context.env.PLANNER_KV.get(k.name);
       if (uStr) {
         const u = JSON.parse(uStr);
-        return { username: u.username, role: u.role };
+        return { username: u.username, role: u.role, telegramUsername: u.telegramUsername };
       }
       return null;
     })
@@ -30,7 +30,7 @@ export const onRequestPost: PagesFunction<{ PLANNER_KV: KVNamespace }> = async (
   }
 
   try {
-    const { username, password, role = 'user' } = await context.request.json() as any;
+    const { username, password, role = 'user', telegramUsername } = await context.request.json() as any;
     if (!username || !password) {
       return new Response(JSON.stringify({ error: 'اطلاعات ناقص است' }), { status: 400 });
     }
@@ -41,7 +41,7 @@ export const onRequestPost: PagesFunction<{ PLANNER_KV: KVNamespace }> = async (
     }
 
     const hashed = await hashPassword(password);
-    await context.env.PLANNER_KV.put(`user:${username}`, JSON.stringify({ username, passwordHash: hashed, role }));
+    await context.env.PLANNER_KV.put(`user:${username}`, JSON.stringify({ username, passwordHash: hashed, role, telegramUsername }));
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { 'Content-Type': 'application/json' }
@@ -65,6 +65,42 @@ export const onRequestDelete: PagesFunction<{ PLANNER_KV: KVNamespace }> = async
     await context.env.PLANNER_KV.delete(`user:${username}`);
     await context.env.PLANNER_KV.delete(`data:${username}`); // clear data too
     
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: 'خطای سرور' }), { status: 500 });
+  }
+};
+
+export const onRequestPut: PagesFunction<{ PLANNER_KV: KVNamespace }> = async (context) => {
+  const user = await getSessionUser(context.request, context.env.PLANNER_KV);
+  if (!user || user.role !== 'admin') {
+    return new Response(JSON.stringify({ error: 'عدم دسترسی' }), { status: 403 });
+  }
+
+  try {
+    const { username, password, telegramUsername } = await context.request.json() as any;
+    if (!username) {
+      return new Response(JSON.stringify({ error: 'اطلاعات ناقص است' }), { status: 400 });
+    }
+
+    const existingStr = await context.env.PLANNER_KV.get(`user:${username}`);
+    if (!existingStr) {
+      return new Response(JSON.stringify({ error: 'کاربر یافت نشد' }), { status: 404 });
+    }
+    
+    const existing = JSON.parse(existingStr);
+    
+    if (password) {
+      existing.passwordHash = await hashPassword(password);
+    }
+    if (telegramUsername !== undefined) {
+      existing.telegramUsername = telegramUsername;
+    }
+
+    await context.env.PLANNER_KV.put(`user:${username}`, JSON.stringify(existing));
+
     return new Response(JSON.stringify({ success: true }), {
       headers: { 'Content-Type': 'application/json' }
     });
