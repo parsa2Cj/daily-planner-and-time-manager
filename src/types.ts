@@ -8,12 +8,26 @@ export interface Task {
   createdAt: number;
 }
 
+export interface ChecklistItem {
+  id: string;
+  text: string;
+  completed: boolean;
+}
+
 export interface ScheduleEvent {
   id: string;
   title: string;
   startTime: string; // HH:MM format
   endTime: string;   // HH:MM format
   color: string;     // Tailwind color class
+  checklist?: ChecklistItem[];
+}
+
+export interface RecurringTask {
+  id: string;
+  title: string;
+  time: string; // HH:MM
+  daysOfWeek: number[]; // 0=Sun, 1=Mon, ..., 6=Sat
 }
 
 export interface DailyLog {

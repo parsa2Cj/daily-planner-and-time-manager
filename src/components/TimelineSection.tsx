@@ -6,6 +6,7 @@ interface TimelineSectionProps {
   events: ScheduleEvent[];
   onAddEvent: (event: Omit<ScheduleEvent, 'id'>) => void;
   onDeleteEvent: (id: string) => void;
+  onUpdateEvent: (event: ScheduleEvent) => void;
 }
 
 // Fixed list of hours for time blocking (6:00 AM to 11:00 PM)
@@ -23,11 +24,12 @@ const EVENT_COLORS = [
   { name: 'صورتی ملایم', class: 'bg-rose-500/10 text-rose-600 border-rose-500/20' },
 ];
 
-export default function TimelineSection({ events, onAddEvent, onDeleteEvent }: TimelineSectionProps) {
+export default function TimelineSection({ events, onAddEvent, onDeleteEvent, onUpdateEvent }: TimelineSectionProps) {
   const [selectedHour, setSelectedHour] = useState<string | null>(null);
   const [eventTitle, setEventTitle] = useState('');
   const [selectedColor, setSelectedColor] = useState(EVENT_COLORS[0].class);
   const [duration, setDuration] = useState('1'); // duration in hours (1 or 2)
+  const [newItemText, setNewItemText] = useState<{ [key: string]: string }>({});
 
   const handleOpenAdd = (hour: string) => {
     setSelectedHour(hour);
@@ -50,6 +52,7 @@ export default function TimelineSection({ events, onAddEvent, onDeleteEvent }: T
       startTime: selectedHour,
       endTime: formattedEndHour,
       color: selectedColor,
+      checklist: [],
     });
 
     setSelectedHour(null);
@@ -63,6 +66,33 @@ export default function TimelineSection({ events, onAddEvent, onDeleteEvent }: T
       const endVal = parseInt(e.endTime.split(':')[0], 10);
       return hourVal >= startVal && hourVal < endVal;
     });
+  };
+
+  const handleAddChecklistItem = (e: React.FormEvent, eventId: string) => {
+    e.preventDefault();
+    const text = newItemText[eventId];
+    if (!text || !text.trim()) return;
+    
+    const event = events.find(e => e.id === eventId);
+    if (!event) return;
+    
+    const newItem = { id: Math.random().toString(36).substr(2, 9), text: text.trim(), completed: false };
+    onUpdateEvent({ ...event, checklist: [...(event.checklist || []), newItem] });
+    setNewItemText(prev => ({ ...prev, [eventId]: '' }));
+  };
+
+  const handleToggleChecklistItem = (eventId: string, itemId: string) => {
+    const event = events.find(e => e.id === eventId);
+    if (!event) return;
+    const newChecklist = event.checklist?.map(item => item.id === itemId ? { ...item, completed: !item.completed } : item);
+    onUpdateEvent({ ...event, checklist: newChecklist });
+  };
+
+  const handleDeleteChecklistItem = (eventId: string, itemId: string) => {
+    const event = events.find(e => e.id === eventId);
+    if (!event) return;
+    const newChecklist = event.checklist?.filter(item => item.id !== itemId);
+    onUpdateEvent({ ...event, checklist: newChecklist });
   };
 
   return (
@@ -96,24 +126,62 @@ export default function TimelineSection({ events, onAddEvent, onDeleteEvent }: T
                 {matchedEvent ? (
                   isStartOfEvent ? (
                     <div
-                      className={`flex items-center justify-between p-3 rounded-2xl border ${matchedEvent.color} shadow-sm relative group`}
+                      className={`flex flex-col p-3 rounded-2xl border ${matchedEvent.color} shadow-sm relative group`}
                     >
-                      <div className="flex items-center gap-2.5">
-                        <Clock className="w-4 h-4 text-current shrink-0 opacity-70" />
-                        <div className="text-right">
-                          <p className="text-xs font-bold leading-none mb-1 opacity-75">
-                            {matchedEvent.startTime} - {matchedEvent.endTime}
-                          </p>
-                          <h4 className="text-sm font-extrabold tracking-wide">{matchedEvent.title}</h4>
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-2.5">
+                          <Clock className="w-4 h-4 text-current shrink-0 opacity-70 mt-0.5" />
+                          <div className="text-right">
+                            <p className="text-xs font-bold leading-none mb-1 opacity-75">
+                              {matchedEvent.startTime} - {matchedEvent.endTime}
+                            </p>
+                            <h4 className="text-sm font-extrabold tracking-wide">{matchedEvent.title}</h4>
+                          </div>
                         </div>
+                        <button
+                          onClick={() => onDeleteEvent(matchedEvent.id)}
+                          className="p-1 text-current/50 hover:text-rose-600 rounded hover:bg-black/5 transition-colors cursor-pointer"
+                          title="حذف رویداد"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
                       </div>
-                      <button
-                        onClick={() => onDeleteEvent(matchedEvent.id)}
-                        className="p-1 text-current/50 hover:text-rose-600 rounded hover:bg-black/5 transition-colors cursor-pointer"
-                        title="حذف رویداد"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                      
+                      {/* Checklist Area */}
+                      <div className="mt-3 space-y-1.5 pr-6 border-t border-current/10 pt-2">
+                        {matchedEvent.checklist?.map(item => (
+                          <div key={item.id} className="flex items-center justify-between gap-2 text-xs">
+                             <div 
+                               className="flex items-center gap-2 cursor-pointer flex-1" 
+                               onClick={() => handleToggleChecklistItem(matchedEvent.id, item.id)}
+                             >
+                               <input type="checkbox" checked={item.completed} readOnly className="accent-current cursor-pointer w-3 h-3" />
+                               <span className={`${item.completed ? 'line-through opacity-60' : 'opacity-90'} font-semibold truncate`}>
+                                 {item.text}
+                               </span>
+                             </div>
+                             <button 
+                               onClick={() => handleDeleteChecklistItem(matchedEvent.id, item.id)} 
+                               className="opacity-0 group-hover:opacity-100 hover:text-rose-500 transition-opacity p-0.5"
+                             >
+                               <X className="w-3 h-3" />
+                             </button>
+                          </div>
+                        ))}
+                        <form 
+                          onSubmit={(e) => handleAddChecklistItem(e, matchedEvent.id)}
+                          className="flex items-center gap-2 mt-1"
+                        >
+                           <Plus className="w-3 h-3 opacity-60" />
+                           <input 
+                             type="text"
+                             value={newItemText[matchedEvent.id] || ''}
+                             onChange={(e) => setNewItemText(prev => ({ ...prev, [matchedEvent.id]: e.target.value }))}
+                             placeholder="افزودن زیرکار..." 
+                             className="text-xs bg-transparent border-none outline-none w-full placeholder:text-current placeholder:opacity-50 font-semibold" 
+                           />
+                        </form>
+                      </div>
                     </div>
                   ) : (
                     // Consecutive block for multi-hour events

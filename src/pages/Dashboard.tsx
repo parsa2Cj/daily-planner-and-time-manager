@@ -6,8 +6,9 @@ import TaskSection from '../components/TaskSection';
 import PomodoroTimer from '../components/PomodoroTimer';
 import ReflectionSection from '../components/ReflectionSection';
 import MonthlyCalendar from '../components/MonthlyCalendar';
-import { Task, ScheduleEvent, DailyLog, Priority, ActivityMap } from '../types';
-import { ShieldAlert, RefreshCw } from 'lucide-react';
+import RecurringTasksManager from '../components/RecurringTasksManager';
+import { Task, ScheduleEvent, DailyLog, Priority, ActivityMap, RecurringTask } from '../types';
+import { ShieldAlert, RefreshCw, CalendarDays, Zap } from 'lucide-react';
 
 const DEFAULT_LOG: DailyLog = {
   energy: 3,
@@ -21,6 +22,8 @@ export default function Dashboard() {
   const [events, setEvents] = useState<ScheduleEvent[]>([]);
   const [focusSessionsCount, setFocusSessionsCount] = useState<number>(0);
   const [dailyLog, setDailyLog] = useState<DailyLog>(DEFAULT_LOG);
+  const [recurringTasks, setRecurringTasks] = useState<RecurringTask[]>([]);
+  const [isRecurringModalOpen, setIsRecurringModalOpen] = useState(false);
 
   // Calendar State
   const [selectedDate, setSelectedDate] = useState<string>(() => {
@@ -85,9 +88,35 @@ export default function Dashboard() {
     }
   };
 
+  const fetchRecurringTasks = async () => {
+    try {
+      const res = await fetch('/api/recurring');
+      const json = await res.json();
+      if (res.ok && json.data) {
+        setRecurringTasks(json.data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch recurring tasks', err);
+    }
+  };
+
   useEffect(() => {
     fetchActivityMap();
+    fetchRecurringTasks();
   }, []);
+
+  const saveRecurringTasks = async (newTasks: RecurringTask[]) => {
+    setRecurringTasks(newTasks);
+    try {
+      await fetch('/api/recurring', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newTasks)
+      });
+    } catch (err) {
+      console.error('Failed to save recurring tasks', err);
+    }
+  };
 
   // Save modifications to API
   const saveData = async (dataToSave: any) => {
@@ -205,7 +234,28 @@ export default function Dashboard() {
     reader.readAsText(file);
   };
 
+  const currentDayOfWeek = new Date(selectedDate).getDay();
+  const suggestedRecurringTasks = recurringTasks.filter(rt => 
+    rt.daysOfWeek.includes(currentDayOfWeek) && 
+    !events.some(e => e.title === rt.title)
+  );
 
+  const handleAddSuggestedTask = (rt: RecurringTask) => {
+    const endHourInt = parseInt(rt.time.split(':')[0], 10) + 1;
+    const formattedEndHour = endHourInt < 10 ? `0${endHourInt}:00` : `${endHourInt}:00`;
+    
+    handleAddEvent({
+      title: rt.title,
+      startTime: rt.time,
+      endTime: formattedEndHour,
+      color: 'bg-natural-sage/15 text-natural-sage border-natural-sage/25',
+      checklist: []
+    });
+  };
+
+  const handleUpdateEvent = (updatedEvent: ScheduleEvent) => {
+    setEvents((prev) => prev.map((e) => e.id === updatedEvent.id ? updatedEvent : e));
+  };
 
   return (
     <div className="min-h-screen text-natural-text py-8 px-4 sm:px-8 lg:px-12 font-sans transition-all selection:bg-natural-sage selection:text-white pb-20">
@@ -227,6 +277,16 @@ export default function Dashboard() {
           log={dailyLog}
         />
 
+        <div className="flex items-center justify-end">
+          <button 
+            onClick={() => setIsRecurringModalOpen(true)}
+            className="flex items-center gap-2 bg-natural-container/60 hover:bg-natural-container border border-natural-border px-4 py-2 rounded-xl text-sm font-bold text-natural-olive transition-colors shadow-sm"
+          >
+            <CalendarDays className="w-4 h-4" />
+            مدیریت برنامه‌های دوره‌ای و ثابت
+          </button>
+        </div>
+
         {/* Monthly Calendar */}
         <div className="flex justify-center w-full max-w-3xl mx-auto">
           <div className="w-full">
@@ -238,6 +298,29 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* Suggested Recurring Tasks for Today */}
+        {suggestedRecurringTasks.length > 0 && (
+          <div className="glass-card p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fade-in border-natural-sage/30 bg-natural-sage/5" dir="rtl">
+            <div className="flex items-center gap-2">
+              <Zap className="w-5 h-5 text-natural-sage" />
+              <p className="text-sm font-bold text-natural-olive">برنامه‌های ثابت پیشنهادی برای امروز:</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {suggestedRecurringTasks.map(rt => (
+                <button
+                  key={rt.id}
+                  onClick={() => handleAddSuggestedTask(rt)}
+                  className="bg-white/80 hover:bg-white text-xs font-bold px-3 py-1.5 rounded-lg border border-natural-border hover:border-natural-sage transition-all flex items-center gap-1.5"
+                >
+                  <span className="text-natural-olive">{rt.title}</span>
+                  <span className="text-natural-muted font-mono">{rt.time}</span>
+                  <span className="text-natural-sage">+</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Main interactive grids */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Right side: Daily Time Blocking (7 cols) */}
@@ -246,6 +329,7 @@ export default function Dashboard() {
               events={events}
               onAddEvent={handleAddEvent}
               onDeleteEvent={handleDeleteEvent}
+              onUpdateEvent={handleUpdateEvent}
             />
           </div>
 
@@ -276,6 +360,14 @@ export default function Dashboard() {
           <p>© {new Date().getFullYear()} سامانه مدیریت هوشمند زمان و برنامه‌ریزی.</p>
         </footer>
       </div>
+
+      {isRecurringModalOpen && (
+        <RecurringTasksManager
+          tasks={recurringTasks}
+          onSave={saveRecurringTasks}
+          onClose={() => setIsRecurringModalOpen(false)}
+        />
+      )}
     </div>
   );
 }
