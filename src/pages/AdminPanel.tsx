@@ -246,15 +246,15 @@ export default function AdminPanel() {
                     </p>
                     <p className="text-[10px] font-bold text-natural-muted uppercase mt-0.5">{u.role}</p>
                   </div>
-                  {u.username !== 'admin' && (
-                    <div className="flex items-center gap-1">
-                      <button
-                        onClick={() => openEditModal(u)}
-                        className="p-2 text-natural-muted hover:text-amber-500 hover:bg-amber-500/10 rounded-lg transition-all"
-                        title="ویرایش کاربر"
-                      >
-                        <Edit className="w-4 h-4" />
-                      </button>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => openEditModal(u)}
+                      className="p-2 text-natural-muted hover:text-amber-500 hover:bg-amber-500/10 rounded-lg transition-all"
+                      title="ویرایش کاربر"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </button>
+                    {u.username !== 'admin' && (
                       <button
                         onClick={() => handleDelete(u.username)}
                         className="p-2 text-natural-muted hover:text-rose-500 hover:bg-rose-500/10 rounded-lg transition-all"
@@ -262,8 +262,8 @@ export default function AdminPanel() {
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
               ))}
               {users.length === 0 && <p className="text-xs text-natural-muted">کاربری یافت نشد.</p>}
