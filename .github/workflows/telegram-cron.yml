@@ -2,8 +2,8 @@ name: Telegram Hourly Cron
 
 on:
   schedule:
-    # Run every hour on the hour
-    - cron: '0 * * * *'
+    # Run at minute 30 past every hour UTC, which corresponds to the top of the hour in Tehran (UTC+3:30)
+    - cron: '30 * * * *'
   workflow_dispatch:
     # Allows manual triggering from GitHub Actions tab
 
