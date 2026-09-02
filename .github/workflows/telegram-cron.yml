@@ -1,9 +1,9 @@
-name: Telegram Hourly Cron
+name: Telegram Cron Reminder
 
 on:
   schedule:
-    # Run at minute 30 past every hour UTC, which corresponds to the top of the hour in Tehran (UTC+3:30)
-    - cron: '30 * * * *'
+    # Run every 5 minutes to check for 10-minute task reminders
+    - cron: '*/5 * * * *'
   workflow_dispatch:
     # Allows manual triggering from GitHub Actions tab
 
@@ -11,7 +11,8 @@ jobs:
   run-cron:
     runs-on: ubuntu-latest
     steps:
-      - name: Hit Hourly Cron Endpoint
+      - name: Hit Cron Reminder Endpoint
         run: |
           # Use SITE_URL and CRON_SECRET from GitHub repository secrets
-          curl -X GET "${{ secrets.SITE_URL }}/api/cron/hourly?secret=${{ secrets.CRON_SECRET }}"
+          curl -s -X GET "${{ secrets.SITE_URL }}/api/cron/hourly?secret=${{ secrets.CRON_SECRET }}"
+
